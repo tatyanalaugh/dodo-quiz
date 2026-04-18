@@ -1,0 +1,681 @@
+/* ============================================================
+   Додо Викторина — стили v2.0
+   Тёплый игровой дизайн в фирменной палитре Додо.
+
+   КАК КАСТОМИЗИРОВАТЬ:
+   — Цвета:       блок :root ниже (секция 1)
+   — Шрифт:       переменная --font + ссылка в base.html
+   — Скругления:  --card-radius, --btn-radius, --pill-radius
+   — Тени:        --shadow-sm / --shadow-md / --shadow-lg
+   ============================================================ */
+
+
+/* ──────────────────────────────────────────────────────────
+   1. CSS-переменные — меняй здесь, чтобы перекрасить всё
+   ────────────────────────────────────────────────────────── */
+:root {
+    /* === Главная палитра Додо === */
+    --orange:        #FF6900;          /* основной акцент */
+    --orange-dark:   #D95500;          /* hover-состояние кнопки */
+    --orange-light:  #FF8C40;          /* светлый акцент */
+    --orange-glow:   rgba(255, 105, 0, 0.15);
+
+    /* === Дополнительные цвета === */
+    --cream:         #FFF8F2;          /* фон карточек второго плана */
+    --peach:         #FFE4CA;          /* персиковый акцент */
+    --yellow:        #FFD60A;          /* жёлтый декор */
+
+    /* === Текст === */
+    --text:          #1C1C2E;          /* основной — тёмно-синий */
+    --text-muted:    #8888A8;          /* вторичный серый */
+
+    /* === Статусы ответов === */
+    --green:         #22C55E;
+    --green-bg:      #F0FDF4;
+    --green-border:  #86EFAC;
+    --red:           #EF4444;
+    --red-bg:        #FFF1F1;
+    --red-border:    #FCA5A5;
+
+    /* === Карточки === */
+    --card-bg:       #FFFFFF;
+    --card-radius:   24px;             /* скругление карточек */
+    --btn-radius:    14px;             /* скругление кнопок */
+    --pill-radius:   999px;            /* скругление пилюль */
+
+    /* === Тени === */
+    --shadow-sm:     0 2px 12px rgba(255, 105, 0, 0.09);
+    --shadow-md:     0 6px 28px rgba(255, 105, 0, 0.14);
+    --shadow-lg:     0 14px 48px rgba(255, 105, 0, 0.20);
+    --shadow-btn:    0 4px 16px rgba(255, 105, 0, 0.38);
+
+    /* === Шрифт — меняй здесь на другой Google Font === */
+    --font: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   2. Базовый сброс
+   ────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: var(--font);
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    /* Тёплый градиент фона — меняй три цвета ниже */
+    background: linear-gradient(150deg, #FFF4EA 0%, #FFEBD4 55%, #FFD9B5 100%);
+    background-attachment: fixed;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   3. Страница + декоративные пятна (чистый CSS, без JS)
+   ────────────────────────────────────────────────────────── */
+.page {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    overflow: hidden;
+}
+
+/* Оранжевое пятно в правом верхнем углу */
+.page::before {
+    content: '';
+    position: fixed;
+    top: -160px;
+    right: -120px;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, rgba(255, 105, 0, 0.14) 0%, transparent 65%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Жёлтое пятно в левом нижнем углу */
+.page::after {
+    content: '';
+    position: fixed;
+    bottom: -140px;
+    left: -130px;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(255, 214, 10, 0.16) 0%, transparent 65%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   4. Контейнер
+   ────────────────────────────────────────────────────────── */
+.container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.container--center {
+    text-align: center;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   5. Анимация появления — все карточки плавно въезжают снизу
+   ────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero,
+.card,
+.result-hero {
+    animation: fadeUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   6. Бренд-бейдж
+   ────────────────────────────────────────────────────────── */
+.brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--orange);
+    color: #FFFFFF;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    padding: 7px 18px;
+    border-radius: var(--pill-radius);
+    margin-bottom: 24px;
+    box-shadow: 0 3px 14px rgba(255, 105, 0, 0.32);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   7. Заголовки и текст
+   ────────────────────────────────────────────────────────── */
+.title {
+    font-size: 46px;           /* меняй здесь */
+    font-weight: 900;
+    line-height: 1.12;
+    color: var(--text);
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+}
+
+.title__accent {
+    color: var(--orange);
+}
+
+.subtitle {
+    font-size: 17px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.65;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   8. Пилюли-фичи (главная страница)
+   ────────────────────────────────────────────────────────── */
+.features {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+}
+
+.feature-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FFFFFF;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: var(--pill-radius);
+    box-shadow: var(--shadow-sm);
+    border: 1.5px solid rgba(255, 105, 0, 0.12);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   9. Кнопки
+   ────────────────────────────────────────────────────────── */
+.btn {
+    display: inline-block;
+    font-family: var(--font);
+    font-weight: 800;
+    font-size: 17px;
+    text-decoration: none;
+    text-align: center;
+    padding: 15px 32px;
+    border: none;
+    border-radius: var(--btn-radius);
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        transform 0.12s ease,
+        box-shadow 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    line-height: 1;
+}
+
+.btn:active {
+    transform: scale(0.97) !important;
+}
+
+/* Главная — оранжевая */
+.btn--primary {
+    background: var(--orange);
+    color: #FFFFFF;
+    box-shadow: var(--shadow-btn);
+}
+
+.btn--primary:hover {
+    background: var(--orange-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 105, 0, 0.45);
+}
+
+/* Вторичная — белая */
+.btn--secondary {
+    background: #FFFFFF;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+    border: 1.5px solid rgba(255, 105, 0, 0.15);
+}
+
+.btn--secondary:hover {
+    background: var(--cream);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Большая кнопка (CTA) */
+.btn--large {
+    font-size: 19px;
+    padding: 18px 52px;
+    min-width: 200px;
+    border-radius: 16px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   10. Карточки-графики (главная страница)
+   ────────────────────────────────────────────────────────── */
+.charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 32px 0;
+    text-align: left;
+}
+
+.chart-card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    border: 1.5px solid rgba(255, 105, 0, 0.08);
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.chart-card__icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.chart-card__title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.chart-card__hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   11. Прогресс-бар викторины
+   ────────────────────────────────────────────────────────── */
+.progress {
+    margin-bottom: 20px;
+}
+
+.progress__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.progress__label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.progress__label strong {
+    color: var(--text);
+    font-weight: 900;
+}
+
+.progress__pct {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--orange);
+    background: var(--orange-glow);
+    padding: 3px 10px;
+    border-radius: var(--pill-radius);
+}
+
+.progress__bar {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 105, 0, 0.12);
+    border-radius: var(--pill-radius);
+    overflow: hidden;
+}
+
+.progress__fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange-light), var(--orange));
+    border-radius: var(--pill-radius);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 8px rgba(255, 105, 0, 0.35);
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   12. Карточка вопроса
+   ────────────────────────────────────────────────────────── */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    padding: 36px;
+    box-shadow: var(--shadow-md);
+}
+
+/* Метка уровня сложности */
+.level-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 5px 13px;
+    border-radius: var(--pill-radius);
+    margin-bottom: 18px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+}
+
+/* Меняй цвета тегов здесь */
+.level-tag--easy {
+    background: #F0FDF4;
+    color: #15803D;
+}
+
+.level-tag--medium {
+    background: #FFFBEB;
+    color: #B45309;
+}
+
+.level-tag--hard {
+    background: #FFF1F2;
+    color: #BE123C;
+}
+
+/* Текст вопроса */
+.question {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.38;
+    color: var(--text);
+    margin-bottom: 28px;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   13. Варианты ответов
+   ────────────────────────────────────────────────────────── */
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    background: #F9F9FC;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    padding: 16px 18px;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.option-btn:hover {
+    background: #FFF4EA;
+    border-color: var(--orange);
+    box-shadow: 0 2px 14px rgba(255, 105, 0, 0.13);
+    transform: translateX(4px);
+}
+
+.option-btn:active {
+    transform: translateX(2px) scale(0.99);
+}
+
+/* Кружок с буквой */
+.option-btn__letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    background: var(--orange);
+    color: #FFFFFF;
+    border-radius: 10px;        /* меняй здесь: 50% = круг, 10px = скруглённый квадрат */
+    font-weight: 900;
+    font-size: 15px;
+    transition: background-color 0.15s ease;
+}
+
+.option-btn:hover .option-btn__letter {
+    background: var(--orange-dark);
+}
+
+.option-btn__text {
+    flex: 1;
+    line-height: 1.4;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   14. Экран результата
+   ────────────────────────────────────────────────────────── */
+.result-hero {
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    padding: 52px 40px 44px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 20px;
+}
+
+/* Большой эмодзи вверху */
+.result-emoji {
+    font-size: 60px;
+    line-height: 1;
+    margin-bottom: 20px;
+}
+
+/* Блок с числом XX / YY */
+.score-display {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.score-big {
+    font-size: 84px;
+    font-weight: 900;
+    color: var(--orange);
+    line-height: 1;
+    letter-spacing: -3px;
+}
+
+.score-sep {
+    font-size: 52px;
+    color: var(--text-muted);
+    font-weight: 300;
+    margin: 0 2px;
+}
+
+.score-total {
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.result-label {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+
+/* Сообщение по результату */
+.result-message {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    padding: 16px 24px;
+    border-radius: 14px;
+    background: var(--cream);
+    line-height: 1.4;
+}
+
+/* Меняй цвет фона карточки сообщения здесь */
+.result-message--great {
+    background: var(--green-bg);
+    color: #15803D;
+}
+
+.result-message--perfect {
+    background: linear-gradient(135deg, #FFF4EA, var(--peach));
+    color: var(--orange-dark);
+}
+
+/* Ряд кнопок */
+.buttons-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
+/* ──────────────────────────────────────────────────────────
+   15. Адаптивность — мобильные устройства (≤ 600px)
+   ────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .page {
+        padding: 24px 12px;
+        align-items: flex-start;
+    }
+
+    /* Скрываем декоративные пятна — они не нужны на мобильном */
+    .page::before,
+    .page::after {
+        display: none;
+    }
+
+    .title {
+        font-size: 30px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+    }
+
+    .charts {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+
+    .question {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    .option-btn {
+        font-size: 15px;
+        padding: 14px 14px;
+    }
+
+    .option-btn__letter {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .result-hero {
+        padding: 36px 20px 32px;
+        border-radius: 20px;
+    }
+
+    .score-big {
+        font-size: 68px;
+    }
+
+    .score-sep {
+        font-size: 40px;
+    }
+
+    .score-total {
+        font-size: 34px;
+    }
+
+    .result-emoji {
+        font-size: 48px;
+    }
+
+    .result-message {
+        font-size: 16px;
+        padding: 14px 18px;
+    }
+
+    .btn--large {
+        width: 100%;
+        padding: 17px 24px;
+    }
+
+    .buttons-row .btn {
+        flex: 1;
+        min-width: 130px;
+    }
+}

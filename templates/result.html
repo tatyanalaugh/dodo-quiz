@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Результат — Додо Викторина{% endblock %}
+
+{% block content %}
+<main class="container container--center">
+
+    <div class="result-hero">
+
+        <!-- Эмодзи меняется в зависимости от результата.
+             Меняй эмодзи здесь по вкусу. -->
+        <div class="result-emoji">
+            {% if score == total %}
+                🎉
+            {% elif score >= total * 0.7 %}
+                🔥
+            {% elif score >= total * 0.4 %}
+                👍
+            {% else %}
+                💪
+            {% endif %}
+        </div>
+
+        <!-- Итоговый счёт крупно: XX / YY -->
+        <div class="score-display">
+            <span class="score-big">{{ score }}</span>
+            <span class="score-sep">/</span>
+            <span class="score-total">{{ total }}</span>
+        </div>
+
+        <p class="result-label">правильных ответов</p>
+
+        <!-- Короткое сообщение.
+             Классы --perfect и --great задают цвет фона карточки в CSS.
+             Меняй пороги (0.7, 0.4) и тексты здесь. -->
+        <p class="result-message
+            {%- if score == total %} result-message--perfect
+            {%- elif score >= total * 0.7 %} result-message--great
+            {%- endif %}">
+            {% if score == total %}
+                Идеально! Ты настоящий аналитик Додо 🎉
+            {% elif score >= total * 0.7 %}
+                Отличный результат! Ты хорошо понимаешь данные.
+            {% elif score >= total * 0.4 %}
+                Неплохо, но есть куда расти.
+            {% else %}
+                Есть над чем поработать — попробуй ещё раз!
+            {% endif %}
+        </p>
+
+    </div>
+
+    <!-- Кнопки действий -->
+    <div class="buttons-row">
+        <a href="{{ url_for('start') }}" class="btn btn--primary">Сыграть ещё раз</a>
+        <a href="{{ url_for('index') }}" class="btn btn--secondary">На главную</a>
+    </div>
+
+</main>
+{% endblock %}

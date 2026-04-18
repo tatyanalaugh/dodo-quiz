@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}🍕 Додо Викторина — Начать{% endblock %}
+
+{% block content %}
+<main class="container container--center">
+
+    <div class="hero">
+
+        <!-- Фирменный бейдж вверху -->
+        <div class="brand-badge">🍕 Додо Пицца</div>
+
+        <!-- Главный заголовок -->
+        <h1 class="title">
+            Викторина про<br>
+            <span class="title__accent">скидки и данные</span>
+        </h1>
+
+        <!-- Описание -->
+        <p class="subtitle">
+            Проверь, насколько хорошо ты понимаешь,<br>
+            как скидки влияют на клиентов и выручку.<br>
+            10 вопросов по реальным данным. Поехали!
+        </p>
+
+        <!-- Пилюли с ключевыми фактами об игре -->
+        <div class="features">
+            <span class="feature-pill">🎯 10 вопросов</span>
+            <span class="feature-pill">📊 Реальные данные</span>
+            <span class="feature-pill">🏆 3 уровня сложности</span>
+        </div>
+
+        <!-- Кнопка старта — ведёт на /start, где инициализируется сессия -->
+        <a href="{{ url_for('start') }}" class="btn btn--primary btn--large">
+            Начать игру →
+        </a>
+
+    </div>
+
+    <!-- Секция с графиками.
+         Вставь сюда <img> или <iframe> с Plotly / Datawrapper.
+         Блок можно полностью удалить, если графики не нужны. -->
+    <section class="charts">
+        <div class="chart-card">
+            <span class="chart-card__icon">📈</span>
+            <h3 class="chart-card__title">Скидки и клиенты</h3>
+            <p class="chart-card__hint">
+                Место для графика — вставь &lt;img&gt; или &lt;iframe&gt; с Plotly / Datawrapper.
+                <!-- Пример: <img src="{{ url_for('static', filename='img/chart1.png') }}" alt="График"> -->
+            </p>
+        </div>
+        <div class="chart-card">
+            <span class="chart-card__icon">🗺️</span>
+            <h3 class="chart-card__title">Города и скидки</h3>
+            <p class="chart-card__hint">
+                Место для интерактивного графика — вставь &lt;iframe&gt; от Datawrapper или Plotly.
+            </p>
+        </div>
+    </section>
+
+</main>
+{% endblock %}

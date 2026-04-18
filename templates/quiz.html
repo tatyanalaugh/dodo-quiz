@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Вопрос {{ question_number }} из {{ total }}{% endblock %}
+
+{% block content %}
+<main class="container">
+
+    <!-- Прогресс: метка слева, процент справа, полоска заполнения -->
+    <div class="progress">
+        <div class="progress__row">
+            <span class="progress__label">
+                Вопрос <strong>{{ question_number }}</strong> из {{ total }}
+            </span>
+            <span class="progress__pct">
+                {{ (question_number / total * 100) | round(0, 'floor') | int }}%
+            </span>
+        </div>
+        <div class="progress__bar">
+            <!-- Ширина = question_number / total × 100% -->
+            <div class="progress__fill"
+                 style="width: {{ (question_number / total * 100) | round(0, 'floor') }}%"></div>
+        </div>
+    </div>
+
+    <!-- Карточка вопроса -->
+    <div class="card">
+
+        <!-- Цветная метка уровня сложности.
+             Классы level-tag--easy / --medium / --hard задают цвет в CSS. -->
+        {% set lv = question.level | lower %}
+        {% if 'лёгк' in lv or 'лег' in lv %}
+            <span class="level-tag level-tag--easy">🟢 {{ question.level }}</span>
+        {% elif 'средн' in lv %}
+            <span class="level-tag level-tag--medium">🟡 {{ question.level }}</span>
+        {% else %}
+            <span class="level-tag level-tag--hard">🔴 {{ question.level }}</span>
+        {% endif %}
+
+        <!-- Текст вопроса -->
+        <h2 class="question">{{ question.text }}</h2>
+
+        <!-- Форма с вариантами.
+             При клике кнопка отправляет POST на /quiz с номером варианта. -->
+        <form method="POST" action="{{ url_for('quiz') }}" class="options">
+            {% for option in question.options %}
+                <button type="submit"
+                        name="answer"
+                        value="{{ loop.index0 }}"
+                        class="option-btn">
+                    <span class="option-btn__letter">{{ ['А', 'Б', 'В', 'Г'][loop.index0] }}</span>
+                    <span class="option-btn__text">{{ option }}</span>
+                </button>
+            {% endfor %}
+        </form>
+
+    </div>
+
+</main>
+{% endblock %}
