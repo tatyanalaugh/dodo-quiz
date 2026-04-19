@@ -55,6 +55,11 @@
         <!-- Всплывающая подсказка с верным ответом — показывается JS-ом -->
         <div id="answer-tooltip" class="answer-tooltip" style="display:none;"></div>
 
+        <!-- Кнопка перехода к следующему вопросу — показывается JS-ом после ответа -->
+        <button id="next-btn" class="next-btn" style="display:none;" type="button">
+            Дальше →
+        </button>
+
     </div>
 
 </main>
@@ -65,12 +70,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const correctIndex = parseInt(form.dataset.correct);
     const buttons = Array.from(form.querySelectorAll('.option-btn'));
     const tooltip = document.getElementById('answer-tooltip');
+    const nextBtn = document.getElementById('next-btn');
+    let submitTimer = null;
+    let selectedAnswer = null;
+
+    function submitAnswer() {
+        if (submitTimer) clearTimeout(submitTimer);
+        var hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'answer';
+        hidden.value = selectedAnswer;
+        form.appendChild(hidden);
+        form.submit();
+    }
+
+    nextBtn.addEventListener('click', submitAnswer);
 
     buttons.forEach(function (btn) {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
 
-            const selectedIndex = parseInt(btn.value);
+            selectedAnswer = parseInt(btn.value);
 
             // Блокируем все кнопки, чтобы нельзя было кликнуть повторно
             buttons.forEach(function (b) { b.disabled = true; });
@@ -78,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Всегда подсвечиваем правильный ответ зелёным
             buttons[correctIndex].classList.add('option-btn--correct');
 
-            if (selectedIndex === correctIndex) {
+            if (selectedAnswer === correctIndex) {
                 tooltip.innerHTML = '✅ Правильно!';
                 tooltip.classList.add('answer-tooltip--correct');
             } else {
@@ -90,16 +110,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             tooltip.style.display = 'block';
+            nextBtn.style.display = 'block';
 
-            // Через 1.8 с отправляем форму с выбранным ответом
-            setTimeout(function () {
-                var hidden = document.createElement('input');
-                hidden.type = 'hidden';
-                hidden.name = 'answer';
-                hidden.value = selectedIndex;
-                form.appendChild(hidden);
-                form.submit();
-            }, 1800);
+            // Автоматически переходим через 3 с, если не нажата кнопка
+            submitTimer = setTimeout(submitAnswer, 3000);
         });
     });
 });

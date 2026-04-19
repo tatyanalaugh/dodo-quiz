@@ -574,6 +574,30 @@ body {
 }
 
 
+/* Кнопка "Дальше →" */
+.next-btn {
+    display: block;
+    margin: 16px 0 0 auto;
+    padding: 12px 28px;
+    background: var(--accent, #F97316);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.next-btn:hover {
+    background: #ea6a05;
+    transform: translateY(-1px);
+}
+
+.next-btn:active {
+    transform: translateY(0);
+}
+
 /* ──────────────────────────────────────────────────────────
    14. Экран результата
    ────────────────────────────────────────────────────────── */
