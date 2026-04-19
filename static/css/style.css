@@ -509,6 +509,72 @@ body {
 
 
 /* ──────────────────────────────────────────────────────────
+   13b. Состояния ответов: верный (зелёный) / неверный (красный)
+   ────────────────────────────────────────────────────────── */
+
+/* Правильный ответ — зелёный */
+.option-btn.option-btn--correct,
+.option-btn.option-btn--correct:hover {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: #15803D;
+    transform: none;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+}
+
+.option-btn.option-btn--correct .option-btn__letter,
+.option-btn.option-btn--correct:hover .option-btn__letter {
+    background: var(--green);
+}
+
+/* Неверный ответ — красный */
+.option-btn.option-btn--wrong,
+.option-btn.option-btn--wrong:hover {
+    background: var(--red-bg);
+    border-color: var(--red);
+    color: #B91C1C;
+    transform: none;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+}
+
+.option-btn.option-btn--wrong .option-btn__letter,
+.option-btn.option-btn--wrong:hover .option-btn__letter {
+    background: var(--red);
+}
+
+/* Неактивные кнопки — убираем hover-эффект */
+.option-btn:disabled:not(.option-btn--correct):not(.option-btn--wrong):hover {
+    background: #F9F9FC;
+    border-color: transparent;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Всплывающая подсказка с правильным ответом */
+.answer-tooltip {
+    margin-top: 16px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    animation: fadeUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.answer-tooltip--correct {
+    background: var(--green-bg);
+    border: 2px solid var(--green-border);
+    color: #15803D;
+}
+
+.answer-tooltip--wrong {
+    background: var(--red-bg);
+    border: 2px solid var(--red-border);
+    color: #B91C1C;
+}
+
+
+/* ──────────────────────────────────────────────────────────
    14. Экран результата
    ────────────────────────────────────────────────────────── */
 .result-hero {
